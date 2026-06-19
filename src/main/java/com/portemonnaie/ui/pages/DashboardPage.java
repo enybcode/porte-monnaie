@@ -58,9 +58,13 @@ public class DashboardPage extends ScrollPane {
         StatCard expenseCard = new StatCard("Total des dépenses",
                 service.formatMoney(service.getTotalExpense()));
         expenseCard.emphasize("expense");
+        StatCard savingsCard = new StatCard("Epargne suivie",
+                service.formatMoney(service.getSavingsTotal()));
+        savingsCard.emphasize("savings");
         HBox.setHgrow(incomeCard, Priority.ALWAYS);
         HBox.setHgrow(expenseCard, Priority.ALWAYS);
-        HBox statsRow = new HBox(20, incomeCard, expenseCard);
+        HBox.setHgrow(savingsCard, Priority.ALWAYS);
+        HBox statsRow = new HBox(20, incomeCard, expenseCard, savingsCard);
 
         // --- Résumé du mois -------------------------------------------------
         YearMonth now = YearMonth.now();

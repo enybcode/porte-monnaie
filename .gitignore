@@ -1,4 +1,7 @@
 target/
+dist/
+tools/
+*.zip
 *.class
 
 .idea/

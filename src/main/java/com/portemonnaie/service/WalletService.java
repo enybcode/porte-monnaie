@@ -1,9 +1,11 @@
 package com.portemonnaie.service;
 
 import com.portemonnaie.dao.CategoryDao;
+import com.portemonnaie.dao.GoalDao;
 import com.portemonnaie.dao.SettingsDao;
 import com.portemonnaie.dao.TransactionDao;
 import com.portemonnaie.model.Category;
+import com.portemonnaie.model.Goal;
 import com.portemonnaie.model.Transaction;
 import com.portemonnaie.model.TransactionType;
 
@@ -28,6 +30,7 @@ public class WalletService {
     private final TransactionDao transactionDao = new TransactionDao();
     private final CategoryDao categoryDao = new CategoryDao();
     private final SettingsDao settingsDao = new SettingsDao();
+    private final GoalDao goalDao = new GoalDao();
 
     // ====================== TRANSACTIONS (CRUD) ==========================
     public void addTransaction(Transaction t) { transactionDao.insert(t); }
@@ -57,6 +60,10 @@ public class WalletService {
 
     public double getBalance() {
         return getTotalIncome() - getTotalExpense();
+    }
+
+    public double getSavingsTotal() {
+        return goalDao.totalSaved();
     }
 
     private double sumByType(TransactionType type) {
@@ -167,6 +174,12 @@ public class WalletService {
 
     public void deleteCategory(int id) { categoryDao.deleteCustom(id); }
 
+    // ====================== OBJECTIFS D'EPARGNE ==========================
+    public List<Goal> getGoals() { return goalDao.findAll(); }
+    public void addGoal(Goal goal) { goalDao.insert(goal); }
+    public void updateGoal(Goal goal) { goalDao.update(goal); }
+    public void deleteGoal(int id) { goalDao.delete(id); }
+
     // ====================== RÉGLAGES =====================================
     public String getUserName() { return settingsDao.get("user_name", "Utilisateur"); }
     public void setUserName(String name) { settingsDao.set("user_name", name); }
@@ -178,6 +191,7 @@ public class WalletService {
     public void resetData() {
         transactionDao.deleteAll();
         categoryDao.deleteAllCustom();
+        goalDao.deleteAll();
     }
 
     // ====================== FORMATAGE ====================================
