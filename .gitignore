@@ -1,6 +1,7 @@
 target/
 dist/
 tools/
+tmp/
 *.zip
 *.class
 
