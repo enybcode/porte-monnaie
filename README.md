@@ -1,30 +1,88 @@
-# Porte-Monnaie 💼
+# Porte-Monnaie
 
-Application de bureau de gestion de budget personnel, écrite en **Java + JavaFX**
-avec sauvegarde locale **SQLite**. Style visuel inspiré d'un porte-monnaie en cuir
-(sombre, brun/beige/doré, boutons arrondis, cartes-compartiments).
+## Presentation du projet
 
-## Fonctionnalités
+Porte-Monnaie est une application de bureau developpee dans le cadre du BTS SIO option SLAM.
 
-- **Tableau de bord** : solde, total des revenus/dépenses, résumé du mois, dernières opérations.
-- **Transactions** : ajout, modification, suppression, historique complet.
-- **Filtres** : par type, catégorie, date, montant et mot-clé.
-- **Catégories** : 8 catégories par défaut + catégories personnalisées.
-- **Statistiques** : dépenses/revenus par catégorie (camemberts), évolution du solde,
-  mois le plus dépensier, catégorie la plus dépensière.
-- **Export** : CSV et PDF.
-- **Paramètres** : nom d'utilisateur, devise (€ / $ / £), réinitialisation, à propos.
-- **Persistance** : les données sont stockées dans `~/.porte-monnaie/porte-monnaie.db`
-  et ne disparaissent pas à la fermeture.
+L'objectif est de permettre a un utilisateur de gerer simplement son budget personnel depuis une interface graphique inspiree d'un portefeuille numerique.
 
-## Prérequis
+L'application permet de suivre les revenus, les depenses, le solde, les objectifs d'epargne et les statistiques principales.
 
-- **JDK 17 ou plus récent** (testé jusqu'à JDK 21).
-- **Maven 3.8+** (gère automatiquement JavaFX, SQLite et OpenPDF).
+## Problematique
 
-Pas besoin d'installer JavaFX à la main : Maven télécharge tout.
+De nombreuses personnes suivent leurs finances avec plusieurs outils differents : notes, tableurs, applications bancaires ou papier.
 
-## Lancer l'application
+Le but de Porte-Monnaie est de proposer une solution centralisee, simple et locale pour mieux visualiser sa situation financiere.
+
+## Technologies utilisees
+
+- Java 17
+- JavaFX
+- SQLite
+- JDBC
+- Maven
+- Git et GitHub
+
+SQLite est utilise pour cette version car l'application fonctionne localement sur un PC, sans serveur a installer. Une evolution possible serait de migrer vers MySQL.
+
+## Fonctionnalites principales
+
+- Creation de compte utilisateur
+- Connexion avec mot de passe
+- Tableau de bord avec solde, revenus, depenses et epargne
+- Ajout, modification et suppression de transactions
+- Gestion des revenus et depenses par categorie
+- Historique avec filtres
+- Objectifs d'epargne
+- Statistiques avec graphiques
+- Export des donnees en CSV et PDF
+
+## Securite
+
+L'application prend en compte plusieurs points de securite :
+
+- les mots de passe ne sont pas stockes en clair ;
+- un sel est genere pour chaque mot de passe ;
+- le mot de passe est hashe avant l'enregistrement ;
+- les requetes SQL utilisent des requetes preparees ;
+- les donnees sont stockees localement sur le poste de l'utilisateur.
+
+## Architecture du projet
+
+Le projet est organise en plusieurs couches :
+
+- `model` : classes representant les donnees principales ;
+- `dao` : acces a la base de donnees ;
+- `service` : logique metier et calculs ;
+- `ui` : interface graphique JavaFX ;
+- `db` : connexion et creation de la base SQLite.
+
+Cette organisation permet de separer l'affichage, la logique metier et l'acces aux donnees.
+
+## Base de donnees
+
+Les tables principales sont :
+
+- `users` : utilisateurs de l'application ;
+- `transactions` : revenus et depenses ;
+- `categories` : categories de transactions ;
+- `goals` : objectifs d'epargne ;
+- `settings` : parametres de l'application.
+
+## Demonstration possible
+
+Pendant une presentation, il est possible de montrer :
+
+1. la creation d'un compte ;
+2. la connexion ;
+3. l'ajout d'un revenu ;
+4. l'ajout d'une depense ;
+5. le tableau de bord ;
+6. la creation d'un objectif d'epargne ;
+7. les statistiques ;
+8. l'export des transactions.
+
+## Lancement
 
 Depuis le dossier du projet :
 
@@ -32,79 +90,28 @@ Depuis le dossier du projet :
 mvn clean javafx:run
 ```
 
-C'est la méthode la plus simple et la plus fiable.
+Une version executable Windows est disponible dans :
 
-### Depuis un IDE
-
-- **IntelliJ IDEA** : *File → Open* puis sélectionner le dossier (Maven détecté
-  automatiquement). Lancer via l'onglet Maven → `Plugins → javafx → javafx:run`,
-  ou exécuter la classe `com.portemonnaie.Main`.
-- **Eclipse** : *Import → Existing Maven Projects*. Lancer le but Maven `javafx:run`.
-- **VS Code** : extensions *Extension Pack for Java* + *Maven*. Lancer la tâche
-  Maven `javafx:run`.
-
-> Astuce : si vous lancez `Main` directement depuis l'IDE et obtenez
-> « JavaFX runtime components are missing », utilisez plutôt `mvn javafx:run`,
-> qui configure correctement le module-path JavaFX.
-
-## Dépendances
-
-| Bibliothèque | Rôle | Version |
-|---|---|---|
-| `org.openjfx:javafx-controls` | Interface graphique | 17.0.2 |
-| `org.xerial:sqlite-jdbc` | Base de données locale | 3.45.1.0 |
-| `com.github.librepdf:openpdf` | Export PDF | 1.3.30 |
-
-## Arborescence
-
-```
-porte-monnaie/
-├── pom.xml
-├── README.md
-└── src/
-    └── main/
-        ├── java/
-        │   └── com/portemonnaie/
-        │       ├── Main.java                 (point d'entrée)
-        │       ├── model/                    (objets métier)
-        │       │   ├── Transaction.java
-        │       │   ├── Category.java
-        │       │   └── TransactionType.java
-        │       ├── db/                        (connexion + schéma SQLite)
-        │       │   └── Database.java
-        │       ├── dao/                        (accès aux données)
-        │       │   ├── TransactionDao.java
-        │       │   ├── CategoryDao.java
-        │       │   └── SettingsDao.java
-        │       ├── service/                    (logique métier)
-        │       │   ├── WalletService.java
-        │       │   ├── TransactionFilter.java
-        │       │   └── ExportService.java
-        │       └── ui/                          (interface graphique)
-        │           ├── App.java
-        │           ├── theme/Theme.java
-        │           ├── components/
-        │           │   ├── NavButton.java
-        │           │   └── StatCard.java
-        │           └── pages/
-        │               ├── DashboardPage.java
-        │               ├── TransactionsPage.java
-        │               ├── AddTransactionPage.java
-        │               ├── CategoriesPage.java
-        │               ├── StatisticsPage.java
-        │               └── SettingsPage.java
-        └── resources/
-            └── styles.css                      (thème cuir)
+```text
+dist/Porte-Monnaie/Porte-Monnaie.exe
 ```
 
-## Architecture
+## Competences BTS SIO SLAM mobilisees
 
-Séparation claire en trois couches :
+- Programmation orientee objet
+- Developpement d'une interface graphique
+- Gestion d'une base de donnees
+- Utilisation de JDBC
+- Securisation des acces
+- Organisation du code en couches
+- Utilisation de Git et GitHub
+- Documentation et presentation d'un projet
 
-- **Interface (`ui`)** : pages JavaFX + thème CSS. Ne touche jamais à la base.
-- **Logique (`service`)** : calculs, totaux, statistiques, règles métier.
-- **Données (`db` + `dao`)** : connexion SQLite et requêtes.
+## Evolutions possibles
 
-L'interface ne dialogue qu'avec `WalletService`, qui s'appuie sur les DAO.
-
-
+- Migration vers MySQL
+- Gestion de plusieurs comptes bancaires
+- Export Excel
+- Transactions recurrentes
+- Notifications de budget
+- Application mobile
