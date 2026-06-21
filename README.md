@@ -107,7 +107,4 @@ Séparation claire en trois couches :
 
 L'interface ne dialogue qu'avec `WalletService`, qui s'appuie sur les DAO.
 
-## Améliorations possibles (v2)
 
-Voir la conversation : budgets mensuels avec alertes, transactions récurrentes,
-multi-comptes, import CSV, sauvegarde/restauration, thème clair/sombre, etc.
