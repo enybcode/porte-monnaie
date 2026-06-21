@@ -148,6 +148,10 @@ public class Database {
                 + "VALUES('user_name', 'Utilisateur');");
             st.executeUpdate("INSERT OR IGNORE INTO settings(key, value) "
                 + "VALUES('currency', '€');");
+            st.executeUpdate("INSERT OR IGNORE INTO users(first_name, last_name, email, password_hash, salt, created_at) "
+                + "VALUES('Compte', 'Test', 'test@portemonnaie.local', "
+                + "'6KcAVdYzQZuPogNQdAlRqniyrR6HeQVOyXXPWZMlG7A=', "
+                + "'porte-monnaie-demo-salt', '2026-06-21');");
         } catch (SQLException e) {
             throw new RuntimeException("Erreur d'initialisation des données", e);
         }
